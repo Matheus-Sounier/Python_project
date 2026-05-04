@@ -1,0 +1,19 @@
+services:
+  
+  app:
+    build: .
+    container_name: ${CONTAINER_NAME_APP}
+    restart: unless-stopped
+    env_file:
+      - .env
+      
+    ports:
+      - ${APP_PORT}:8000
+    volumes:
+      - ./app:/app
+      - /app/venv
+    depends_on:
+        oracle:
+          condition: service_healthy
+    networks:
+      - app_network
