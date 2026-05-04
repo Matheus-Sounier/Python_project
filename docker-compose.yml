@@ -17,3 +17,29 @@ services:
           condition: service_healthy
     networks:
       - app_network
+
+  nginx:
+    
+  oracle:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: ${CONTAINER_NAME}
+    restart: unless-stopped
+    env_file: 
+      - .env
+
+    ports:
+      - "${ORACLE_DB_PORT}:1521"
+
+    volumes:
+      - /lab/docker/oracle/oradata:/opt/oracle/oradata 
+      - /lab/docker/oracle/diag:/opt/oracle/diag 
+      - /lab/docker/oracle/dbs:/opt/oracle/dbs
+    
+    networks:
+      - oracle_network
+
+    healthcheck:
+      test: ["CMD", "ls"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
